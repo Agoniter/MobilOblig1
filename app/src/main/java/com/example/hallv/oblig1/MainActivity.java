@@ -2,6 +2,7 @@ package com.example.hallv.oblig1;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
@@ -12,11 +13,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_READ_CONTACTS = 0;
@@ -30,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         mainList.setNestedScrollingEnabled(true);
         setSupportActionBar(myToolbar);
         contacts = new ContactList();
-        ContactAdapter contactAdapter = new ContactAdapter(this, contacts.getContacts());
+        final ContactAdapter contactAdapter = new ContactAdapter(this, contacts.getContacts());
         mainList.setAdapter(contactAdapter);
         // Here, thisActivity is the current activity
         permCheck();
@@ -40,10 +44,20 @@ public class MainActivity extends AppCompatActivity {
             String name=phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             contacts.addContact(name,phoneNumber);
-
         }
         phones.close();
+        mainList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+             Intent newActivity = new Intent(MainActivity.this, TextActivity.class);
+                        Contact contact = contactAdapter.getItem(position);
+                        newActivity.putExtra("thisContact", contact);
+                        startActivity(newActivity);
+
+            }
+        });
     }
+
 
     public void permCheck(){
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED) {
