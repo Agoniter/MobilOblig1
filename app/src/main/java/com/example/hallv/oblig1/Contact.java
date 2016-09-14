@@ -24,7 +24,6 @@ public class Contact implements Parcelable {
         this.number = number;
         this.messageList = new MessageList();
         addTestList();
-        messages = getAllMessages();
     }
     public void setName(String name) {
         this.name = name;
@@ -48,6 +47,15 @@ public class Contact implements Parcelable {
         String msg =  messageList.getLastMessage().toString();
         return msg;
     }
+    public void addMessage(String msg){
+        messageList.addMessage(msg);
+    }
+    public MessageList getMessageList(){
+        if (messageList==null){
+            messageList = new MessageList();
+        }
+        return messageList;
+    }
 
     public String getAllMessages(){
         ArrayList<Message> test = messageList.getMessages();
@@ -58,6 +66,7 @@ public class Contact implements Parcelable {
         }
         return returnString;
     }
+
 
 
     // Parcelling part
