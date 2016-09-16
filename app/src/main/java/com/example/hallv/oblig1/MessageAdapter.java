@@ -21,19 +21,15 @@ public class MessageAdapter extends ArrayAdapter {
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Get the data item for this position
         Message message = (Message)getItem(position);
-        // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.text, parent, false);
         }
-        // Lookup view for data population
         TextView contact = (TextView) convertView.findViewById(R.id.contact);
         TextView messageInList = (TextView) convertView.findViewById(R.id.message_in_list);
-        // Populate the data into the template view using the data object
-         contact.setText(textContact.getName());
-         messageInList.setText(message.getMesssage());
-        // Return the completed view to render on screen
+        messageInList.setText(message.getMesssage());
+        contact.setText(textContact.getName());
         return convertView;
     }
+
 }

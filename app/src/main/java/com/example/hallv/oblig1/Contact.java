@@ -14,12 +14,13 @@ public class Contact implements Parcelable {
     String name;
     String number;
     String messages;
+    String id;
     MessageList messageList;
 
 
 
-    public Contact(String name, String number){
-
+    public Contact(String name, String number, String id){
+        this.id = id;
         this.name = name;
         this.number = number;
         this.messageList = new MessageList();
@@ -28,7 +29,6 @@ public class Contact implements Parcelable {
     public void setName(String name) {
         this.name = name;
     }
-
     public String getNumber() {
         return number;
     }
@@ -47,36 +47,26 @@ public class Contact implements Parcelable {
         String msg =  messageList.getLastMessage().toString();
         return msg;
     }
-    public void addMessage(String msg){
-        messageList.addMessage(msg);
-    }
+
     public MessageList getMessageList(){
-        if (messageList==null){
-            messageList = new MessageList();
-        }
         return messageList;
     }
-
-    public String getAllMessages(){
-        ArrayList<Message> test = messageList.getMessages();
-        String returnString = "";
-        for(Message m : test){
-            returnString += m.getMesssage();
-            returnString += "\n";
-        }
-        return returnString;
+    public void replaceList(ArrayList<Message> repList){
+        messageList.replaceList(repList);
     }
-
-
+    public String getId() {
+        return id;
+    }
 
     // Parcelling part
     public Contact(Parcel in){
-        String[] data = new String[3];
+        String[] data = new String[4];
 
         in.readStringArray(data);
         this.name = data[0];
         this.number = data[1];
         this.messages = data[2];
+        this.id = data[3];
     }
 
     @Override
@@ -88,7 +78,7 @@ public class Contact implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(new String[] {this.name,
                 this.number,
-                this.messages});
+                this.messages,this.id});
     }
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         public Contact createFromParcel(Parcel in) {

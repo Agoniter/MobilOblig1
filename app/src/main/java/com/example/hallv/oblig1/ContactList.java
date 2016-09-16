@@ -13,8 +13,8 @@ ArrayList <Contact> contacts;
     public ContactList(){
         contacts = new ArrayList<>();
     }
-    public void addContact(String name, String number){
-        contacts.add(new Contact(name,number));
+    public void addContact(String name, String number, String id){
+        contacts.add(new Contact(name,number,id));
     }
     public ArrayList getContacts(){
         return contacts;

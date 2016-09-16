@@ -19,12 +19,14 @@ public class MessageList implements Parcelable{
         return messages;
     }
     public String getLastMessage(){
-        return messages.get(0).getMesssage();
+        return messages.get(messages.size()-1).getMesssage();
     }
     public void addMessage(String message){
         messages.add(new Message(message));
     }
-
+    public void replaceList(ArrayList<Message> newList){
+        messages = newList;
+    }
     // Parcelling part
     public MessageList(Parcel in){
          in.readTypedList(messages, CREATOR);
