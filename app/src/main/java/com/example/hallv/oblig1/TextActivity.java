@@ -36,6 +36,7 @@ public class TextActivity extends AppCompatActivity {
         ImageButton button = (ImageButton) findViewById(R.id.imageButton);
         final EditText editText = (EditText) findViewById(R.id.editText);
         ListView textList = (ListView) findViewById(R.id.text_list);
+        textList.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         Intent i = getIntent();
         contact = i.getExtras().getParcelable("thisContact");
         messageArrayList = i.getParcelableArrayListExtra("messages");

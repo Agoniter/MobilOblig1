@@ -7,11 +7,11 @@
     android:layout_height="match_parent"
     tools:context="com.example.hallv.oblig1.MainActivity">
     <include layout="@layout/toolbar"
-        android:id="@+id/include" />
+        />
 
     <ListView
         android:layout_width="match_parent"
         android:id="@+id/main_list"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/include" />
+        android:layout_below="@+id/toolbar" />
 </RelativeLayout>
