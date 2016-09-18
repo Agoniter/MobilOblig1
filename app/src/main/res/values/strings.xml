@@ -2,4 +2,6 @@
     <string name="app_name">Oblig1</string>
     <string name="action_settings">settings</string>
     <string name="action_about">about</string>
+    <string name="app_label" />
+    <string name="search_hint" />
 </resources>

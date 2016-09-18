@@ -21,24 +21,28 @@ import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class TextActivity extends AppCompatActivity {
-    private static final int RESULT_CONTACT = 1;
     private Contact contact;
     private ArrayList<Message> messageArrayList;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text);
+        //toolbar setup
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //toolbar setup end
         ImageButton button = (ImageButton) findViewById(R.id.imageButton);
         final EditText editText = (EditText) findViewById(R.id.editText);
         ListView textList = (ListView) findViewById(R.id.text_list);
         textList.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-        Intent i = getIntent();
-        contact = i.getExtras().getParcelable("thisContact");
+        if(savedInstanceState == null) {
+            Intent i = getIntent();
+            contact = i.getExtras().getParcelable("thisContact");
+        }else{
+            contact = savedInstanceState.getParcelable("savedContact");
+        }
         setTitle(contact.getName());
         messageArrayList = contact.getMessageList();
         final MessageAdapter messageAdapter = new MessageAdapter(this, messageArrayList, contact);
@@ -56,12 +60,6 @@ public class TextActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
 
-    }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -82,5 +80,10 @@ public class TextActivity extends AppCompatActivity {
         setResult(RESULT_OK, returnIntent);
         finish();
         super.onBackPressed();
+    }
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putParcelable("savedContact", contact);
     }
 }

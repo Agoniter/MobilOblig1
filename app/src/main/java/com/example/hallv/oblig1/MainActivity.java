@@ -1,31 +1,22 @@
 package com.example.hallv.oblig1;
 
 import android.Manifest;
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.os.Build;
-import android.os.Parcelable;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.os.ParcelableCompatCreatorCallbacks;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_READ_CONTACTS = 0;
@@ -36,27 +27,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
        super.onCreate(savedInstanceState);
-        permCheck();
+        if(savedInstanceState == null) {
+            contacts = new ArrayList<>();
+            permCheck();
+        }
+        else{
+            contacts = savedInstanceState.getParcelableArrayList("savedContacts");
+        }
         setContentView(R.layout.activity_main);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         ListView mainList = (ListView) findViewById(R.id.main_list);
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         mainList.setNestedScrollingEnabled(true);
         setSupportActionBar(myToolbar);
-        contacts = new ArrayList<>();
         contactAdapter = new ContactAdapter(this, contacts);
         mainList.setAdapter(contactAdapter);
-        // Here, thisActivity is the current activity
-        Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,null,null, null);
-        //noinspection ConstantConditions
-        while (phones.moveToNext())
-        {
-            String name=phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-            String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            String id = phones.getString(phones.getColumnIndex(ContactsContract.Contacts._ID));
-            contacts.add(new Contact(name,phoneNumber,id));
-        }
-        phones.close();
         floatingActionButton.setOnClickListener(new View.OnClickListener(){
                     public void onClick(View v){
                         Intent intent = new Intent(MainActivity.this, NewMessageActivity.class);
@@ -117,6 +102,18 @@ public class MainActivity extends AppCompatActivity {
 
             }
     }
+    public void loadContacts(){
+        Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,null,null, null);
+        //noinspection ConstantConditions
+        while (phones.moveToNext())
+        {
+            String name=phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+            String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            String id = phones.getString(phones.getColumnIndex(ContactsContract.Contacts._ID));
+            contacts.add(new Contact(name,phoneNumber,id));
+        }
+        phones.close();
+    }
     public void permCheck(){
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -126,8 +123,32 @@ public class MainActivity extends AppCompatActivity {
                         new String[]{Manifest.permission.READ_CONTACTS},
                         REQUEST_READ_CONTACTS);
             }
+        }else {
+            loadContacts();
         }
 
     }
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_READ_CONTACTS: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    loadContacts();
+
+                }
+                else{
+                    Toast toast = Toast.makeText(getApplicationContext(),"Needs Contact Permission for app to work", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                return;
+            }
+        }
+
+    }
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putParcelableArrayList("savedContacts", contacts);
+
+    }
+
 
 }

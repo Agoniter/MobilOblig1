@@ -15,6 +15,10 @@ public class Message implements Parcelable {
         return messsage;
     }
 
+    public boolean isMine() {
+        return isMine;
+    }
+
     public Message(String msg, boolean isMine){
         messsage = msg;
         this.isMine = isMine;
