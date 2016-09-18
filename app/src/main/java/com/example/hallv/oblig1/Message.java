@@ -9,13 +9,15 @@ import android.os.Parcelable;
 
 public class Message implements Parcelable {
     String messsage;
+    boolean isMine;
 
     public String getMesssage() {
         return messsage;
     }
 
-    public Message(String msg){
+    public Message(String msg, boolean isMine){
         messsage = msg;
+        this.isMine = isMine;
     }
     // Parcelling part
     public Message(Parcel in){

@@ -13,17 +13,14 @@ import java.util.ArrayList;
 public class Contact implements Parcelable {
     String name;
     String number;
-    String messages;
     String id;
-    MessageList messageList;
-
-
+    ArrayList<Message> messageList;
 
     public Contact(String name, String number, String id){
         this.id = id;
         this.name = name;
         this.number = number;
-        this.messageList = new MessageList();
+        this.messageList = new ArrayList<>();
         addTestList();
     }
     public void setName(String name) {
@@ -40,19 +37,21 @@ public class Contact implements Parcelable {
     }
     public void addTestList(){
         for (int i = 0; i<3; i++){
-            messageList.addMessage("Test " + i);
+            addMessage(new Message("Test " + i, false));
         }
     }
     public String getLastMessage(){
-        String msg =  messageList.getLastMessage().toString();
-        return msg;
-    }
+        return messageList.get(messageList.size()-1).getMesssage();
 
-    public MessageList getMessageList(){
+    }
+    public void addMessage(Message message){
+        messageList.add(message);
+    }
+    public ArrayList<Message> getMessageList(){
         return messageList;
     }
     public void replaceList(ArrayList<Message> repList){
-        messageList.replaceList(repList);
+        messageList = repList;
     }
     public String getId() {
         return id;
@@ -60,13 +59,13 @@ public class Contact implements Parcelable {
 
     // Parcelling part
     public Contact(Parcel in){
-        String[] data = new String[4];
+        String[] data = new String[3];
 
         in.readStringArray(data);
         this.name = data[0];
         this.number = data[1];
-        this.messages = data[2];
-        this.id = data[3];
+        this.id = data[2];
+        this.messageList = in.createTypedArrayList(Message.CREATOR);
     }
 
     @Override
@@ -78,7 +77,9 @@ public class Contact implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(new String[] {this.name,
                 this.number,
-                this.messages,this.id});
+                this.id});
+        dest.writeTypedList(this.messageList);
+
     }
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         public Contact createFromParcel(Parcel in) {

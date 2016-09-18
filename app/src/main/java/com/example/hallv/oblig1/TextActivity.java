@@ -39,13 +39,14 @@ public class TextActivity extends AppCompatActivity {
         textList.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         Intent i = getIntent();
         contact = i.getExtras().getParcelable("thisContact");
-        messageArrayList = i.getParcelableArrayListExtra("messages");
+        setTitle(contact.getName());
+        messageArrayList = contact.getMessageList();
         final MessageAdapter messageAdapter = new MessageAdapter(this, messageArrayList, contact);
         textList.setAdapter(messageAdapter);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                messageArrayList.add(new Message(editText.getText().toString()));
+                contact.addMessage(new Message(editText.getText().toString(), true));
                 editText.setText("");
                 messageAdapter.notifyDataSetChanged();
             }
@@ -60,11 +61,6 @@ public class TextActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
-        MenuItem menuItem = menu.findItem(R.id.main_search);
-//        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-//        SearchManager sMngr = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
-//        SearchableInfo searchableInfo = sMngr.getSearchableInfo(getComponentName());
-//        searchView.setSearchableInfo(searchableInfo);
         return true;
     }
     @Override
