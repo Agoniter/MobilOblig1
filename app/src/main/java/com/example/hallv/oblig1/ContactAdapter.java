@@ -30,7 +30,7 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         TextView message = (TextView) convertView.findViewById(R.id.message);
         // Populate the data into the template view using the data object
         name.setText(contact.getName());
-        message.setText(contact.getLastMessage());
+        //message.setText(contact.getLastMessage());
         // Return the completed view to render on screen
         return convertView;
     }
