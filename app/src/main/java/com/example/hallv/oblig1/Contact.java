@@ -69,6 +69,7 @@ public class Contact implements Parcelable {
         in.readStringArray(data);
         this.name = data[0];
         this.messageList = in.createTypedArrayList(Message.CREATOR);
+        this.id=in.readLong();
     }
 
     @Override
@@ -80,6 +81,7 @@ public class Contact implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(new String[] {this.name});
         dest.writeTypedList(this.messageList);
+        dest.writeLong(id);
 
     }
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {

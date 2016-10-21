@@ -16,13 +16,20 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TextActivity extends AppCompatActivity {
     private Contact contact;
     private ArrayList<Message> messageArrayList;
+    MessageAdapter messageAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,14 +52,17 @@ public class TextActivity extends AppCompatActivity {
         }
         setTitle(contact.getName());
         messageArrayList = contact.getMessageList();
-        final MessageAdapter messageAdapter = new MessageAdapter(this, messageArrayList, contact);
+        messageAdapter = new MessageAdapter(this, messageArrayList, contact);
         textList.setAdapter(messageAdapter);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                contact.addMessage(new Message(editText.getText().toString(), true));
+                try {
+                    sendMessage(editText.getText().toString());
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
                 editText.setText("");
-                messageAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -69,7 +79,6 @@ public class TextActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
     @Override
@@ -85,5 +94,20 @@ public class TextActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putParcelable("savedContact", contact);
+    }
+    public void sendMessage(String text) throws UnsupportedEncodingException {
+        new SendMessage(new SendMessage.Callback(){
+            @Override
+            public void update(List<Message> messages){
+                onMessageSent();
+                contact.addMessage(messages.get(0));
+                messageAdapter.notifyDataSetChanged();
+
+            }
+        }).execute( "http://158.38.199.27:8080/MyChatServer/services/chat/messages/send?ownerid=" + 1 +"&text=" + URLEncoder.encode(text, "UTF-8") + "&recipientid="+ this.contact.getId());
+    }
+    public void onMessageSent(){
+        Toast toast = Toast.makeText(this,"Message sent",Toast.LENGTH_SHORT);
+        toast.show();
     }
 }

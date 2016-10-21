@@ -52,9 +52,6 @@ public class RetrieveContacts extends AsyncTask<String, Long, List<Contact>> {
 
         return contacts;
     }
-
-
-
     private List<Contact> loadContacts(String path){
         List<Contact> result = new ArrayList<>();
         HttpURLConnection con = null;
@@ -118,8 +115,6 @@ public class RetrieveContacts extends AsyncTask<String, Long, List<Contact>> {
         }
         return result;
     }
-
-
     @Override
     protected void onPostExecute(List<Contact> contact){
     callback.update(contact);

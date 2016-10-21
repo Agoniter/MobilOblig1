@@ -27,7 +27,7 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         }
         // Lookup view for data population
         TextView name = (TextView) convertView.findViewById(R.id.name);
-        TextView message = (TextView) convertView.findViewById(R.id.message);
+        //TextView message = (TextView) convertView.findViewById(R.id.message);
         // Populate the data into the template view using the data object
         name.setText(contact.getName());
         //message.setText(contact.getLastMessage());

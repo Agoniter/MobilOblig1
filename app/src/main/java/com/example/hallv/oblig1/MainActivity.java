@@ -62,51 +62,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
-        //contactAdapter.notifyDataSetChanged();
+        loadContacts();
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
-            if(requestCode == RESULT_CONTACT) {
-                if (resultCode == RESULT_OK) {
-                    Contact con = data.getExtras().getParcelable("newContact");
-                    Contact tempCon = null;
-                    for (Contact c : contacts) {
-                        if (c.getId() == (con.getId())) {
-                            tempCon = c;
-                            break;
-                        }
-                    }
-                    if (tempCon != null) {
-                        contacts.remove(tempCon);
-                        contacts.add(0, con);
-                    }
-                }
-            }
-                else if(requestCode == RESULT_NEWMESSAGE){
-                    if(resultCode == RESULT_OK) {
-                        Contact con = data.getExtras().getParcelable("newMessageContact");
-                        Contact tempCon = null;
-                        for (Contact c : contacts) {
-                            if (c.getId() == (con.getId())) {
-                                tempCon = c;
-                                break;
-                            }
-                        }if (tempCon != null) {
-                            contacts.remove(tempCon);
-                            contacts.add(0, con);
-                        }
-                    }
 
-            }
-    }
     public void loadContacts(){
              new RetrieveContacts(new RetrieveContacts.Callback(){
                 @Override
                 public void update(List<Contact> contacts){
                     onContactsLoaded((ArrayList<Contact>) contacts);
                 }
-            }).execute("http://158.38.199.71:8080/MyChatServer/services/chat/contacts", "http://158.38.199.71:8080/MyChatServer/services/chat/messages/1");
+            }).execute("http://158.38.199.27:8080/MyChatServer/services/chat/contacts", "http://158.38.199.27:8080/MyChatServer/services/chat/messages/1");
     }
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
